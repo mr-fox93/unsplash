@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
+import QuiltedPhotoList from "./QuiltedPhotoList";
 
-interface UnsplashImage {
+export interface UnsplashImage {
   id: string;
   error: string;
 
   urls: {
-    small: string;
+    regular: string;
+  };
+  user: {
+    name: string;
   };
   description: string;
 }
 
-interface UnsplashResponse {
+export interface UnsplashResponse {
   results: UnsplashImage[];
 }
 
@@ -22,7 +26,7 @@ const fetchUnsplash = async (searchTerm: string): Promise<UnsplashResponse> => {
 
   if (searchTerm === "") {
     res = await axios.get<UnsplashImage[]>(
-      `https://api.unsplash.com/photos/random?count=10&client_id=${apiKey}`
+      `https://api.unsplash.com/photos/random?count=12&client_id=${apiKey}`
     );
     return {
       results: res.data,
@@ -55,9 +59,7 @@ const MainPage = () => {
       {isLoading && <p>Ładowanie...</p>}
       {isError && <p>Wystąpił błąd: {(error as Error).message}</p>}
 
-      {data?.results.map((photo) => (
-        <img key={photo.id} src={photo.urls.small} alt={photo.description} />
-      ))}
+      {data && <QuiltedPhotoList photos={data.results} />}
     </div>
   );
 };
