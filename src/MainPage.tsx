@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 import QuiltedPhotoList from "./QuiltedPhotoList";
+import TextField from "@mui/material/TextField";
 
 export interface UnsplashImage {
   id: string;
@@ -51,7 +52,11 @@ const MainPage = () => {
 
   return (
     <div>
-      <input
+      <TextField
+        margin="normal"
+        id="outlined-basic"
+        label="Find what you like..."
+        variant="outlined"
         value={searchTerm}
         type="text"
         onChange={(e) => setSearchTerm(e.target.value)}
