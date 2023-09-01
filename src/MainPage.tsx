@@ -18,22 +18,32 @@ interface UnsplashResponse {
 
 const fetchUnsplash = async (searchTerm: string): Promise<UnsplashResponse> => {
   const apiKey = process.env.REACT_APP_MY_API_KEY;
-  const res = await axios.get<UnsplashResponse>(
-    `https://api.unsplash.com/search/photos?query=${searchTerm}&client_id=${apiKey}`
-  );
-  console.log(res.data.results);
-  return res.data;
+  let res;
+
+  if (searchTerm === "") {
+    res = await axios.get<UnsplashImage[]>(
+      `https://api.unsplash.com/photos/random?count=10&client_id=${apiKey}`
+    );
+    return {
+      results: res.data,
+    };
+  } else {
+    res = await axios.get<UnsplashResponse>(
+      `https://api.unsplash.com/search/photos?query=${searchTerm}&client_id=${apiKey}`
+    );
+    console.log(res.data.results);
+    return res.data;
+  }
 };
 
 const MainPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data, isLoading, isError, error, isSuccess } =
-    useQuery<UnsplashResponse>(
-      ["photos", searchTerm],
-      () => fetchUnsplash(searchTerm),
-      { enabled: !!searchTerm }
-    );
+  const { data, isLoading, isError, error } = useQuery<UnsplashResponse>(
+    ["photos", searchTerm],
+    () => fetchUnsplash(searchTerm)
+    // { enabled: !!searchTerm }
+  );
 
   return (
     <div>
