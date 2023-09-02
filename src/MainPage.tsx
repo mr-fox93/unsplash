@@ -170,7 +170,7 @@ const MainPage = () => {
           <CircularProgress color="inherit" />
         </Stack>
       )}
-      {isError && <p>Wystąpił błąd: {(error as Error).message}</p>}
+      {isError && <p>Error message: {(error as Error).message}</p>}
 
       {data && <QuiltedPhotoList photos={data.results} />}
     </>
