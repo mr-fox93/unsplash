@@ -5,17 +5,20 @@ import { UnsplashImage } from "./MainPage";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
+import { useMediaQuery } from "@mui/material";
 
 interface QuiltedPhotoListProps {
   photos: UnsplashImage[];
 }
 
 const QuiltedPhotoList: React.FC<QuiltedPhotoListProps> = ({ photos }) => {
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
+
   const handleImageClick = (url: string) => {
     window.open(url, "_blank");
   };
   return (
-    <ImageList variant="quilted" cols={3} rowHeight={300}>
+    <ImageList variant="quilted" cols={isSmallScreen ? 1 : 3} rowHeight={300}>
       {photos.map((photo) => (
         <ImageListItem key={photo.id} style={{ cursor: "pointer" }}>
           <img
