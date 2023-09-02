@@ -3,6 +3,8 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import QuiltedPhotoList from "./QuiltedPhotoList";
 import TextField from "@mui/material/TextField";
+import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
 
 export interface UnsplashImage {
   id: string;
@@ -10,9 +12,16 @@ export interface UnsplashImage {
 
   urls: {
     regular: string;
+    raw: string;
   };
   user: {
     name: string;
+    links: {
+      html: string;
+    };
+    profile_image: {
+      large: string;
+    };
   };
   description: string;
 }
@@ -46,8 +55,12 @@ const MainPage = () => {
 
   const { data, isLoading, isError, error } = useQuery<UnsplashResponse>(
     ["photos", searchTerm],
-    () => fetchUnsplash(searchTerm)
-    // { enabled: !!searchTerm }
+    () => fetchUnsplash(searchTerm),
+    {
+      cacheTime: 1000 * 60 * 60 * 24,
+      staleTime: 1000 * 60 * 60 * 24,
+    }
+    //{ enabled: !!searchTerm }
   );
 
   return (
@@ -60,7 +73,15 @@ const MainPage = () => {
         value={searchTerm}
         type="text"
         onChange={(e) => setSearchTerm(e.target.value)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
       />
+
       {isLoading && <p>Ładowanie...</p>}
       {isError && <p>Wystąpił błąd: {(error as Error).message}</p>}
 
