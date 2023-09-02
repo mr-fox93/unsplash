@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 import QuiltedPhotoList from "./QuiltedPhotoList";
@@ -13,6 +13,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Switch from "@mui/material/Switch";
 import NightsStayIcon from "@mui/icons-material/NightsStay";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import { GlobalContext } from "./global";
 
 export interface UnsplashImage {
   id: string;
@@ -60,7 +61,11 @@ const fetchUnsplash = async (searchTerm: string): Promise<UnsplashResponse> => {
 
 const MainPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [lightDarkMode, setLightDarkMode] = useState(true);
+  const context = useContext(GlobalContext);
+  if (!context) {
+    throw new Error("MainPage must be wrapped with GlobalProvider");
+  }
+  const { lightDarkMode, setLightDarkMode } = context;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -74,12 +79,6 @@ const MainPage = () => {
     }
   );
 
-  //
-  useEffect(() => {
-    console.log("darkmode:", lightDarkMode);
-  }, [lightDarkMode]);
-  //
-
   return (
     <>
       <div
@@ -90,6 +89,7 @@ const MainPage = () => {
           alignItems: "center",
           gap: isMobile ? "10px" : "0",
           padding: ".5rem",
+          backgroundColor: lightDarkMode ? "#fff" : "rgba(0, 0, 0, 0.6)",
         }}
       >
         <div
